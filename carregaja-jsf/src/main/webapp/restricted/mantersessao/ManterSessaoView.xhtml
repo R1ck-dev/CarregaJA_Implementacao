@@ -70,10 +70,18 @@
             <h:outputText value="#{manterSessaoBean.sessao.tempoEstimado}" />
 
             <h:outputText value="Potência efetiva" />
-            <h:outputText value="#{manterSessaoBean.sessao.potenciaEfetiva} kW" />
+            <h:panelGroup>
+              <h:outputText value="#{manterSessaoBean.sessao.potenciaEfetiva}">
+                <f:convertNumber minFractionDigits="1" maxFractionDigits="1" />
+              </h:outputText> kW
+            </h:panelGroup>
 
             <h:outputText value="Energia a repor" />
-            <h:outputText value="#{manterSessaoBean.sessao.energiaARepor} kWh" />
+            <h:panelGroup>
+              <h:outputText value="#{manterSessaoBean.sessao.energiaARepor}">
+                <f:convertNumber minFractionDigits="1" maxFractionDigits="1" />
+              </h:outputText> kWh
+            </h:panelGroup>
           </p:panelGrid>
         </h:panelGroup>
 
