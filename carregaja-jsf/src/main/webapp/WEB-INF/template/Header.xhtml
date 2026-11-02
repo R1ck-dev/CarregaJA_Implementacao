@@ -10,6 +10,8 @@
         rendered="#{usuarioLogado.morador}" />
       <p:menuitem value="Moradores" outcome="/restricted/mantermoradores/ManterMoradoresView.xhtml"
         rendered="#{usuarioLogado.sindico}" />
+      <p:menuitem value="Vagas" outcome="/restricted/mantervagas/ManterVagasView.xhtml"
+        rendered="#{usuarioLogado.sindico}" />
       <p:menuitem value="Sair" action="#{autenticarUsuarioBean.sair}" ajax="false" />
     </p:menubar>
   </h:form>
