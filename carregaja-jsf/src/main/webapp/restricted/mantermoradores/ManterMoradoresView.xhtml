@@ -1,0 +1,93 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+
+  <ui:define name="corpo">
+
+    <f:event type="preRenderView" listener="#{manterMoradoresBean.inicializar}" />
+
+    <h1>Moradores</h1>
+
+    <h:form id="frmMoradores">
+      <p:messages id="messages" showDetail="false" closable="true">
+        <p:autoUpdate />
+      </p:messages>
+
+      <p:panelGrid id="moradorGrid" columns="2" layout="grid"
+        columnClasses="rotulo, campo">
+
+        <p:outputLabel value="Nome" for="nome" />
+        <p:inputText id="nome" maxlength="100" required="true"
+          requiredMessage="Informe o nome."
+          value="#{manterMoradoresBean.nome}" />
+
+        <p:outputLabel value="E-mail" for="email" />
+        <p:inputText id="email" type="email" maxlength="100" required="true"
+          requiredMessage="Informe o e-mail."
+          value="#{manterMoradoresBean.email}" />
+
+        <p:outputLabel value="Apartamento" for="apartamento" />
+        <p:inputText id="apartamento" maxlength="10"
+          required="#{empty param['frmMoradores:sindico_input']}"
+          requiredMessage="Informe o apartamento do morador."
+          value="#{manterMoradoresBean.apartamento}" />
+
+        <p:outputLabel value="É síndico" for="sindico" />
+        <p:selectBooleanCheckbox id="sindico" value="#{manterMoradoresBean.sindico}" />
+
+        <p:outputLabel value="Senha provisória" for="senha" />
+        <p:password id="senha" redisplay="false"
+          required="#{!manterMoradoresBean.editando}"
+          requiredMessage="Informe a senha provisória."
+          validatorMessage="A senha provisória deve ter de 8 a 72 caracteres."
+          placeholder="#{manterMoradoresBean.editando ? 'Preencha só para redefinir' : ''}"
+          value="#{manterMoradoresBean.senhaProvisoria}">
+          <f:validateLength minimum="8" maximum="72" />
+        </p:password>
+
+      </p:panelGrid>
+
+      <p:commandButton icon="pi pi-save" id="salvarButton" value="Salvar"
+        style="margin-top: 20px"
+        actionListener="#{manterMoradoresBean.salvar}"
+        update="@form" process="@this moradorGrid" />
+      <p:commandButton icon="pi pi-times" id="limparButton" value="Limpar"
+        style="margin: 20px 0 0 8px" styleClass="ui-button-secondary"
+        actionListener="#{manterMoradoresBean.limpar}"
+        update="@form" process="@this" />
+
+      <p:dataTable id="usuarios" var="usuario" value="#{manterMoradoresBean.usuarios}"
+        style="margin-top: 20px" reflow="true"
+        emptyMessage="Nenhum morador cadastrado.">
+        <p:column headerText="Nome">#{usuario.nome}</p:column>
+        <p:column headerText="E-mail">#{usuario.email}</p:column>
+        <p:column headerText="Apartamento">#{usuario.apartamento.numero}</p:column>
+        <p:column headerText="Situação">
+          <h:outputText value="#{usuario.ativo ? 'Ativo' : 'Desativado'}" />
+          <h:outputText rendered="#{usuario.perfis.contains('SINDICO')}" value=" · Síndico" />
+        </p:column>
+        <p:column headerText="Ações">
+          <p:commandButton value="Alterar" update="@form" process="@this" styleClass="ui-button-flat"
+            actionListener="#{manterMoradoresBean.editar(usuario)}" />
+          <p:commandButton value="Desativar" rendered="#{usuario.ativo}" update="@form" process="@this"
+            styleClass="ui-button-flat"
+            actionListener="#{manterMoradoresBean.desativar(usuario)}" />
+          <p:commandButton value="Reativar" rendered="#{!usuario.ativo}" update="@form" process="@this"
+            styleClass="ui-button-flat"
+            actionListener="#{manterMoradoresBean.reativar(usuario)}" />
+          <p:commandButton value="Remover" update="@form" process="@this" styleClass="ui-button-flat"
+            actionListener="#{manterMoradoresBean.remover(usuario)}">
+            <p:confirm header="Remover morador" message="Remover #{usuario.nome}?" icon="pi pi-exclamation-triangle" />
+          </p:commandButton>
+        </p:column>
+      </p:dataTable>
+
+      <p:confirmDialog global="true">
+        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" />
+        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" />
+      </p:confirmDialog>
+    </h:form>
+  </ui:define>
+</ui:composition>
