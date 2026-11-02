@@ -23,7 +23,7 @@ public class AutenticacaoFilter implements Filter {
   private static final String INICIO = "/index.xhtml";
   private static final String LOGIN = "/autenticarusuario/AutenticarUsuarioView.xhtml";
   private static final String TROCAR_SENHA = "/restricted/autenticarusuario/TrocarSenhaView.xhtml";
-  private static final List<String> PAGINAS_DO_MORADOR = List.of("/restricted/manterveiculo/");
+  private static final List<String> PAGINAS_DO_MORADOR = List.of("/restricted/manterveiculo/", "/restricted/mantersessao/");
   private static final List<String> PAGINAS_DO_SINDICO = List.of("/restricted/mantermoradores/",
       "/restricted/mantervagas/", "/restricted/definirtarifa/");
 

@@ -6,6 +6,8 @@
   <h:form id="frmMenu" rendered="#{usuarioLogado.logado}">
     <p:menubar styleClass="menubar">
       <p:menuitem value="Início" outcome="/index.xhtml" />
+      <p:menuitem value="Recarga" outcome="/restricted/mantersessao/ManterSessaoView.xhtml"
+        rendered="#{usuarioLogado.morador}" />
       <p:menuitem value="Meu veículo" outcome="/restricted/manterveiculo/ManterVeiculoView.xhtml"
         rendered="#{usuarioLogado.morador}" />
       <p:menuitem value="Moradores" outcome="/restricted/mantermoradores/ManterMoradoresView.xhtml"

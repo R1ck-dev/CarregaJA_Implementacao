@@ -1,0 +1,83 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+  xmlns:h="http://xmlns.jcp.org/jsf/html"
+  xmlns:f="http://xmlns.jcp.org/jsf/core"
+  xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui">
+
+  <ui:define name="corpo">
+
+    <f:event type="preRenderView" listener="#{manterSessaoBean.inicializar}" />
+
+    <h1>Recarga</h1>
+
+    <h:form id="frmSessao">
+      <p:messages id="messages" showDetail="false" closable="true">
+        <p:autoUpdate />
+      </p:messages>
+
+      <h:panelGroup id="semVeiculo" layout="block" rendered="#{empty manterSessaoBean.veiculo}">
+        <p>Antes da primeira recarga, cadastre o seu veículo.</p>
+        <h:link value="Cadastrar meu veículo" outcome="/restricted/manterveiculo/ManterVeiculoView.xhtml" />
+      </h:panelGroup>
+
+      <h:panelGroup id="conteudo" layout="block" rendered="#{not empty manterSessaoBean.veiculo}">
+
+        <h:panelGroup id="formulario" layout="block" rendered="#{empty manterSessaoBean.sessao}">
+          <p>Informe a vaga em que você plugou o #{manterSessaoBean.veiculo.modelo} e o nível atual da bateria.</p>
+
+          <p:panelGrid id="sessaoGrid" columns="2" layout="grid"
+            columnClasses="rotulo, campo">
+
+            <p:outputLabel value="Vaga" for="vaga" />
+            <p:selectOneMenu id="vaga" required="true" requiredMessage="Informe a vaga."
+              value="#{manterSessaoBean.vagaId}">
+              <f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+              <f:selectItems value="#{manterSessaoBean.vagas}" var="item" itemValue="#{item.id}"
+                itemLabel="#{item.identificacao}" />
+            </p:selectOneMenu>
+
+            <p:outputLabel value="Nível da bateria" for="nivel" />
+            <p:inputNumber id="nivel" decimalPlaces="0" symbol=" %" symbolPosition="s"
+              required="true" requiredMessage="Informe o nível da bateria."
+              validatorMessage="O nível da bateria deve estar entre 0 e 100%."
+              value="#{manterSessaoBean.nivelBateria}">
+              <f:validateLongRange minimum="0" maximum="100" />
+            </p:inputNumber>
+
+          </p:panelGrid>
+
+          <p:commandButton icon="pi pi-bolt" id="iniciarButton" value="Iniciar recarga"
+            style="margin-top: 20px"
+            actionListener="#{manterSessaoBean.iniciar}"
+            update="@form" process="@this sessaoGrid" />
+        </h:panelGroup>
+
+        <h:panelGroup id="sessaoAberta" layout="block" rendered="#{not empty manterSessaoBean.sessao}">
+          <h2>Sessão aberta na vaga #{manterSessaoBean.sessao.vaga}</h2>
+          <p>#{manterSessaoBean.sessao.descricaoEstado}</p>
+          <p:panelGrid columns="2" layout="grid" columnClasses="rotulo, campo">
+            <h:outputText value="Início" />
+            <h:outputText value="#{manterSessaoBean.sessao.inicio}">
+              <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText>
+
+            <h:outputText value="Previsão de conclusão" />
+            <h:outputText value="#{manterSessaoBean.sessao.previsaoConclusao}">
+              <f:convertDateTime type="localDateTime" pattern="dd/MM/yyyy HH:mm" />
+            </h:outputText>
+
+            <h:outputText value="Tempo estimado" />
+            <h:outputText value="#{manterSessaoBean.sessao.tempoEstimado}" />
+
+            <h:outputText value="Potência efetiva" />
+            <h:outputText value="#{manterSessaoBean.sessao.potenciaEfetiva} kW" />
+
+            <h:outputText value="Energia a repor" />
+            <h:outputText value="#{manterSessaoBean.sessao.energiaARepor} kWh" />
+          </p:panelGrid>
+        </h:panelGroup>
+
+      </h:panelGroup>
+    </h:form>
+  </ui:define>
+</ui:composition>
